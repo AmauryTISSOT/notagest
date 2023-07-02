@@ -19,6 +19,11 @@ const clientSchema = new Schema({
         enum: ['inProgress', 'hold', 'closed'],
         required: true,
     },
+    features: {
+        type: [String],
+        required: false,
+        default: [],
+    },
 },
     { timestamps: true });
 
