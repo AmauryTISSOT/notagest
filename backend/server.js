@@ -15,7 +15,7 @@ app.use((req, res, next) => {
 });
 
 // create routes
-app.use('/api/clients', clientRouter);
+app.use('/api/files', clientRouter);
 
 // connect to database
 mongoose.connect(process.env.MONGO_URI)
