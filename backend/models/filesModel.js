@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 
 const { Schema } = mongoose;
 
-// schema who describe the structure of client database
+// schema who describe the structure of file database
 
-const clientSchema = new Schema({
+const filesSchema = new Schema({
     type: {
         type: String,
         enum: ['vente', 'succession', 'modifEDD'],
@@ -28,6 +28,6 @@ const clientSchema = new Schema({
     { timestamps: true });
 
 // Create model
-const clientModel = mongoose.model('clientModel', clientSchema);
+const filesModel = mongoose.model('filesModel', filesSchema);
 
-module.exports = clientModel;
+module.exports = filesModel;

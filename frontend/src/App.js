@@ -1,8 +1,11 @@
+import FilesForm from "./components/FilesForm";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
-    <div className="text-3xl font-bold underline">
-      Hello world
+    <div className="bg-white text-slate-900">
+      <Navbar />
+      <FilesForm />
     </div>
   );
 }

@@ -1,7 +1,7 @@
 require('dotenv').config();
 const mongoose = require("mongoose");
 const express = require("express");
-const clientRouter = require("./routes/client");
+const filesRouter = require("./routes/files");
 
 // express app
 const app = express();
@@ -15,7 +15,7 @@ app.use((req, res, next) => {
 });
 
 // create routes
-app.use('/api/files', clientRouter);
+app.use('/api/files', filesRouter);
 
 // connect to database
 mongoose.connect(process.env.MONGO_URI)
