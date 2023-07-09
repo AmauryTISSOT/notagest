@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
+import featuresObject from '../constants/featuresObject';
 
 import icons from "../assets/icons";
 
@@ -7,39 +8,27 @@ const CreateFilesForm = () => {
     const [type, setType] = useState('');
     const [name, setName] = useState('');
     const [status, setStatus] = useState('');
-    const [features, setFeatures] = useState('');
+    const [features, setFeatures] = useState([]);
     const [error, setError] = useState(null);
     const [emptyFields, setEmptyFields] = useState([]);
-    const [closeMenu1, setCloseMenu1] = useState(true);
-    const [closeMenu2, setCloseMenu2] = useState(true);
+    const [menu, setMenu] = useState({ menu1: true, menu2: false, menu3: false });
 
-    const { checkListId } = useParams();
     const [checklistItems, setChecklistItems] = useState(
-        checkListData[checkListId]
+        featuresObject
     );
 
-    const featuresObject = {
-        1: "Prêt",
-        2: "Permis de constuire",
-        3: "Autorisation d'urbanisme",
-        4: "Autorisation des copropriétaires",
-        5: "Vente d'un bien préalable",
-        6: "Plus-value",
-        7: "Représentant fiscal",
-        8: "Négociation",
-        9: "Procuration à établir",
-        10: "DPU",
-        11: "Purge préemption locataire",
-        12: "Purge préemption preneur rural",
-        13: "Purge préemption voisin (vois)",
-        14: "Prêt vendeur à rembourser",
-        15: "Ordre irrévocable",
-        16: "Compromis d'agence",
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // eslint-disable-next-line array-callback-return
+        checklistItems.map(item => {
+            if (item.checked === true) {
+                features.push(item.id);
+            }
+        });
+        setStatus("inProgress");
+        //FIXME: features is not send to backend (return an empty array)
         const files = { type, name, status, features };
 
         // POST response
@@ -52,7 +41,7 @@ const CreateFilesForm = () => {
         });
 
         const json = await response.json();
-
+        //FIXME: when clicked return 400 (Bad request)
         if (!response.ok) {
             setError(json.error);
             setEmptyFields(json.emptyFields);
@@ -61,9 +50,9 @@ const CreateFilesForm = () => {
         // Reset fields when data is submitted
         if (response.ok) {
             setType('');
-            setType('');
+            setName('');
             setStatus('');
-            setFeatures('');
+            setFeatures([]);
             setError(null);
             setEmptyFields([]);
             console.log("new files added", json);
@@ -72,18 +61,28 @@ const CreateFilesForm = () => {
 
     const handleClickType = (e) => {
         setType(e.currentTarget.getAttribute("data-value"));
-        setCloseMenu1(!closeMenu1);
+        setMenu({
+            menu1: false,
+            menu2: true,
+            menu3: false
+        });
     };
 
     const selectTypeFilesMenu = () => {
         return (
             <div className='bg-blur-bg fixed z-10 left-0 top-0 w-full h-full backdrop-blur-sm flex justify-center items-center'>
-                <form className='bg-slate-200 flex flex-col border-2 border-slate-900 m-auto w-[40%] h-[40%]'>
+                <div className='bg-slate-200 flex flex-col border-2 border-slate-900 m-auto w-[40%] h-[40%]'>
                     <div className='flex flex-row gap-2 items-center bg-slate-300 p-5 relative'>
                         <span>{icons.folder_plus}</span>
                         <h1 className='text-2xl font-bold'>Nouveau dossier</h1>
                         <span className='absolute top-4 right-4 cursor-pointer rounded-full'
-                            onClick={() => setCloseMenu1(false)}
+                            onClick={() => setMenu(
+                                {
+                                    menu1: false,
+                                    menu2: false,
+                                    menu3: false
+                                }
+                            )}
                         >{icons.x_circle}</span>
                     </div>
                     <div className='p-5'>
@@ -108,7 +107,7 @@ const CreateFilesForm = () => {
                             </ul>
                         </div>
                     </div>
-                </form>
+                </div>
             </div >
         );
     };
@@ -116,12 +115,18 @@ const CreateFilesForm = () => {
     const selectNameForm = () => {
         return (
             <div className='bg-blur-bg fixed z-10 left-0 top-0 w-full h-full backdrop-blur-sm flex justify-center items-center'>
-                <form className='bg-slate-200 flex flex-col border-2 border-slate-900 m-auto w-[40%] h-[40%]'>
+                <div className='bg-slate-200 flex flex-col border-2 border-slate-900 m-auto w-[40%] h-[40%] relative'>
                     <div className='flex flex-row gap-2 items-center bg-slate-300 p-5 relative'>
                         <span>{icons.folder_plus}</span>
                         <h1 className='text-2xl font-bold'>Nouveau dossier</h1>
                         <span className='absolute top-4 right-4 cursor-pointer rounded-full'
-                            onClick={() => setCloseMenu2(false)}
+                            onClick={() => setMenu(
+                                {
+                                    menu1: false,
+                                    menu2: false,
+                                    menu3: false
+                                }
+                            )}
                         >
                             {icons.x_circle}</span>
                     </div>
@@ -134,13 +139,25 @@ const CreateFilesForm = () => {
                             onChange={(e) => setName(e.target.value)}
                         ></input>
                     </div>
-                    <div className='h-full flex'>
+                    <div className='absolute bottom-4 flex w-full'>
                         <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-auto w-[150px]'
-                            onClick={() => setCloseMenu1(true)}
+                            onClick={() => setMenu(
+                                {
+                                    menu1: true,
+                                    menu2: false,
+                                    menu3: false
+                                }
+                            )}
                         >Précédent</button>
-                        <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded  m-auto w-[150px]' disabled={!name && true}>Suivant</button>
+                        <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded  m-auto w-[150px] disabled:cursor-not-allowed' disabled={!name && true}
+                            onClick={() => setMenu({
+                                menu1: false,
+                                menu2: false,
+                                menu3: true
+                            })}
+                        >Suivant</button>
                     </div>
-                </form>
+                </div>
             </div >
         );
     };
@@ -158,22 +175,27 @@ const CreateFilesForm = () => {
 
 
     const selectFeature = () => {
-        <div className='bg-blur-bg fixed z-10 left-0 top-0 w-full h-full backdrop-blur-sm flex justify-center items-center'>
-            <form className='bg-slate-200 flex flex-col border-2 border-slate-900 m-auto w-[40%] h-[40%]'>
-                <div className='flex flex-row gap-2 items-center bg-slate-300 p-5 relative'>
-                    <span>{icons.folder_plus}</span>
-                    <h1 className='text-2xl font-bold'>Nouveau dossier</h1>
-                    <span className='absolute top-4 right-4 cursor-pointer rounded-full'
-                        onClick={() => setCloseMenu2(false)}
-                    >
-                        {icons.x_circle}</span>
-                </div>
-                <div className='p-5'>
-                    {
-                        Object.values(featuresObject).map((value, index) => {
-                            //checklist
-                            <div className="flex justify-center mt-10">
-                                <ul className="flex flex-col items-start">
+        return (
+            <div className='bg-blur-bg fixed z-10 left-0 top-0 w-full h-full backdrop-blur-sm flex justify-center items-center'>
+                <div className='bg-slate-200 flex flex-col border-2 border-slate-900 m-auto w-[40%] h-[40%] relative'>
+                    <div className='flex flex-row gap-2 items-center bg-slate-300 p-5 relative'>
+                        <span>{icons.folder_plus}</span>
+                        <h1 className='text-2xl font-bold'>Nouveau dossier</h1>
+                        <span className='absolute top-4 right-4 cursor-pointer rounded-full'
+                            onClick={() => setMenu(
+                                {
+                                    menu1: false,
+                                    menu2: false,
+                                    menu3: false
+                                }
+                            )}
+                        >
+                            {icons.x_circle}</span>
+                    </div>
+                    <div className='p-5'>
+                        {
+                            <div className="flex justify-center">
+                                <ul className="grid grid-cols-2 justify-items-start gap-x-16">
                                     {checklistItems.map((item) => (
                                         <li key={item.id} className="flex items-center justify-center">
                                             <input
@@ -183,9 +205,8 @@ const CreateFilesForm = () => {
                                                 onChange={() => handleCheckboxClick(item.id)}
                                             />
                                             <label
-                                                data-testid={item.id}
                                                 style={{
-                                                    textDecoration: item.checked ? "line-through" : "none",
+                                                    fontWeight: item.checked ? "500" : "none",
                                                 }}
                                                 onClick={() => handleCheckboxClick(item.id)}
                                             >
@@ -194,28 +215,35 @@ const CreateFilesForm = () => {
                                         </li>
                                     ))}
                                 </ul>
-                            </div>;
-                        })
-                    }
+                            </div>
+                        }
+                    </div>
+                    <div className='absolute bottom-4 flex w-full'>
+                        <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-auto w-[150px]'
+                            onClick={() => setMenu(
+                                {
+                                    menu1: false,
+                                    menu2: true,
+                                    menu3: false
+                                }
+                            )}
+                        >Précédent</button>
+                        <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded  m-auto w-[150px]'
+                            onClick={handleSubmit}
+                        >Suivant</button>
+                    </div>
                 </div>
-                <div className='h-full flex'>
-                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-auto w-[150px]'
-                        onClick={() => setCloseMenu1(true)}
-                    >Précédent</button>
-                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded  m-auto w-[150px]' disabled={!name && true}>Suivant</button>
-                </div>
-            </form>
-        </div >;
+            </div >
 
+        );
     };
-
-
 
     return (
         <>
-            {closeMenu1 && selectTypeFilesMenu()}
-            {closeMenu2 && type && selectNameForm()}
-
+            {menu.menu1 && selectTypeFilesMenu()}
+            {menu.menu2 && type && selectNameForm()}
+            {menu.menu3 && selectFeature()}
+            {console.log("features", features)}
             {/* <input
                     type="text"
                     onChange={(e) => setType(e.target.value)}
