@@ -20,7 +20,7 @@ const filesSchema = new Schema({
         required: true,
     },
     features: {
-        type: [String],
+        type: [Number],
         required: false,
         default: [],
     },
