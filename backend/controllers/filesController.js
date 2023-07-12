@@ -35,7 +35,7 @@ const getSingleFile = async (req, res) => {
 // create a new file
 // eslint-disable-next-line consistent-return
 const createFile = async (req, res) => {
-    const { type, name, status } = req.body;
+    const { type, name, status, features } = req.body;
 
     // check if the fields are completed
     const emptyFields = [];
@@ -55,7 +55,7 @@ const createFile = async (req, res) => {
 
     // add doc to db
     try {
-        const files = await filesModel.create({ type, name, status });
+        const files = await filesModel.create({ type, name, status, features });
         res.status(200).json(files);
     } catch (error) {
         res.status(400).json({ error: error.message });
