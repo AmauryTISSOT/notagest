@@ -1,6 +1,7 @@
 require('dotenv').config();
 const mongoose = require("mongoose");
 const express = require("express");
+const cors = require("cors");
 const filesRouter = require("./routes/files");
 
 // express app
@@ -8,6 +9,9 @@ const app = express();
 
 // json middleware
 app.use(express.json());
+app.use(cors({
+    origin: "http://localhost:3000"
+}));
 
 app.use((req, res, next) => {
     console.log(req.path, req.method);
