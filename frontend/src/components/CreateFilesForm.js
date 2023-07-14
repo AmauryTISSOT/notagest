@@ -7,11 +7,11 @@ import icons from "../assets/icons";
 const CreateFilesForm = () => {
     const [type, setType] = useState('');
     const [name, setName] = useState('');
-    const [status, setStatus] = useState('');
+    const [status, setStatus] = useState('inProgress');
     const [features, setFeatures] = useState([]);
     const [error, setError] = useState(null);
     const [emptyFields, setEmptyFields] = useState([]);
-    const [menu, setMenu] = useState({ menu1: true, menu2: false, menu3: false });
+    const [menu, setMenu] = useState({ menu1: true, menu2: false, menu3: false, menu4: false });
 
     const [checklistItems, setChecklistItems] = useState(
         featuresObject
@@ -27,8 +27,7 @@ const CreateFilesForm = () => {
                 features.push(item.id);
             }
         });
-        setStatus("inProgress");
-        //FIXME: features is not send to backend (return an empty array)
+
         const files = { type, name, status, features };
 
         // POST response
@@ -41,7 +40,6 @@ const CreateFilesForm = () => {
         });
 
         const json = await response.json();
-        //FIXME: when clicked return 400 (Bad request)
         if (!response.ok) {
             setError(json.error);
             setEmptyFields(json.emptyFields);
@@ -57,6 +55,13 @@ const CreateFilesForm = () => {
             setEmptyFields([]);
             console.log("new files added", json);
         }
+
+        setMenu({
+            menu1: false,
+            menu2: false,
+            menu3: false,
+            menu4: false
+        });
     };
 
     const handleClickType = (e) => {
@@ -64,7 +69,8 @@ const CreateFilesForm = () => {
         setMenu({
             menu1: false,
             menu2: true,
-            menu3: false
+            menu3: false,
+            menu4: false
         });
     };
 
@@ -80,7 +86,8 @@ const CreateFilesForm = () => {
                                 {
                                     menu1: false,
                                     menu2: false,
-                                    menu3: false
+                                    menu3: false,
+                                    menu4: false,
                                 }
                             )}
                         >{icons.x_circle}</span>
@@ -124,7 +131,8 @@ const CreateFilesForm = () => {
                                 {
                                     menu1: false,
                                     menu2: false,
-                                    menu3: false
+                                    menu3: false,
+                                    menu4: false
                                 }
                             )}
                         >
@@ -145,7 +153,8 @@ const CreateFilesForm = () => {
                                 {
                                     menu1: true,
                                     menu2: false,
-                                    menu3: false
+                                    menu3: false,
+                                    menu4: false,
                                 }
                             )}
                         >Précédent</button>
@@ -153,7 +162,8 @@ const CreateFilesForm = () => {
                             onClick={() => setMenu({
                                 menu1: false,
                                 menu2: false,
-                                menu3: true
+                                menu3: true,
+                                menu4: false,
                             })}
                         >Suivant</button>
                     </div>
@@ -186,7 +196,8 @@ const CreateFilesForm = () => {
                                 {
                                     menu1: false,
                                     menu2: false,
-                                    menu3: false
+                                    menu3: false,
+                                    menu4: false,
                                 }
                             )}
                         >
@@ -224,7 +235,8 @@ const CreateFilesForm = () => {
                                 {
                                     menu1: false,
                                     menu2: true,
-                                    menu3: false
+                                    menu3: false,
+                                    menu4: false,
                                 }
                             )}
                         >Précédent</button>
@@ -243,25 +255,7 @@ const CreateFilesForm = () => {
             {menu.menu1 && selectTypeFilesMenu()}
             {menu.menu2 && type && selectNameForm()}
             {menu.menu3 && selectFeature()}
-            {console.log("features", features)}
-            {/* <input
-                    type="text"
-                    onChange={(e) => setType(e.target.value)}
-                    value={type}
-                    className={emptyFields.includes('type') ? 'error' : ''}
-                /> */}
-            {/* 
-                    
-                    <label className='block'>Nom du dossier</label>
-                    <input
-                    type="text"
-                    onChange={(e) => setName(e.target.value)}
-                        value={name}
-                        className={`border-2 border-solid border-slate-300 rounded-e ${emptyFields.includes('name') ? 'border-2 border-solid border-red-700' : ''}`}
-                    />
 
-                    <button className='bg-slate-300 p-3 rounded-e cursor-pointer'>Créer le dossier</button>
-                    {error && <div className='error'>{error}</div>} */}
         </>
     );
 };
