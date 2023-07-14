@@ -183,6 +183,31 @@ const CreateFilesForm = () => {
         );
     };
 
+    const errorDisplay = () => {
+        return (
+            <>
+                <div className=' fixed z-10 left-0 top-0 w-full h-full backdrop-blur-sm flex justify-center items-center'>
+                    <div className='bg-slate-200 flex flex-col border-2 border-slate-900 m-auto w-[40%] h-[40%] relative'>
+                        <div className='flex flex-row gap-2 items-center bg-slate-300 p-5 relative'>
+                            <h1 className='text-2xl font-bold'>Une erreur est survenue</h1>
+                            <span className='absolute top-4 right-4 cursor-pointer rounded-full'
+                                onClick={() => setError(false)}
+                            >
+                                {icons.x_circle}</span>
+                        </div>
+                        <div className="flex justify-center gap-1 p-5">
+                            <h2 className='text-m font-bold text-red-500'>{error} : </h2>
+                            {emptyFields.map((item, keys) => {
+                                return (<p key={keys}>{item}</p>);
+                            })}
+
+                        </div>
+                    </div>
+                </div>
+            </>
+        );
+    };
+
 
     const selectFeature = () => {
         return (
@@ -255,7 +280,7 @@ const CreateFilesForm = () => {
             {menu.menu1 && selectTypeFilesMenu()}
             {menu.menu2 && type && selectNameForm()}
             {menu.menu3 && selectFeature()}
-
+            {error && errorDisplay()}
         </>
     );
 };
