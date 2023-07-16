@@ -11,12 +11,29 @@ const CreateFilesForm = () => {
     const [features, setFeatures] = useState([]);
     const [error, setError] = useState(null);
     const [emptyFields, setEmptyFields] = useState([]);
-    const [menu, setMenu] = useState({ menu1: true, menu2: false, menu3: false, menu4: false });
+    const [menu, setMenu] = useState({ menu1: false, menu2: false, menu3: false, menu4: false });
 
     const [checklistItems, setChecklistItems] = useState(
         featuresObject
     );
 
+    const createBtn = () => {
+        return (
+            <btn
+                className='flex flex-row justify-center items-center gap-2 border-slate-900 border-[1px] rounded w-[250px] cursor-pointer hover:bg-slate-400'
+                onClick={() => setMenu(
+                    {
+                        menu1: true,
+                        menu2: false,
+                        menu3: false,
+                        menu4: false,
+                    }
+                )}>
+                <span>{icons.folder_plus}</span>
+                <h1 className='text-xl font-bold'>Nouveau dossier</h1>
+            </btn>
+        );
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -277,6 +294,7 @@ const CreateFilesForm = () => {
 
     return (
         <>
+            {createBtn()}
             {menu.menu1 && selectTypeFilesMenu()}
             {menu.menu2 && type && selectNameForm()}
             {menu.menu3 && selectFeature()}
