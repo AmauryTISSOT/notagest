@@ -1,4 +1,5 @@
 import React from 'react';
+import CreateFilesForm from './CreateFilesForm';
 
 const Navbar = () => {
     return (
@@ -6,6 +7,7 @@ const Navbar = () => {
             <h1>
                 NotaGest
             </h1>
+            <CreateFilesForm />
         </nav>
     );
 };
