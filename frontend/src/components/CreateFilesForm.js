@@ -19,7 +19,7 @@ const CreateFilesForm = () => {
 
     const createBtn = () => {
         return (
-            <btn
+            <button
                 className='flex flex-row justify-center items-center gap-2 border-slate-900 border-[1px] rounded w-[250px] cursor-pointer hover:bg-slate-400'
                 onClick={() => setMenu(
                     {
@@ -31,7 +31,7 @@ const CreateFilesForm = () => {
                 )}>
                 <span>{icons.folder_plus}</span>
                 <h1 className='text-xl font-bold'>Nouveau dossier</h1>
-            </btn>
+            </button>
         );
     };
 
