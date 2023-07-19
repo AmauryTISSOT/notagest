@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import icons from '../assets/icons';
 
 const Carousel = () => {
+
+    const [chevronLeft, setChevronLeft] = useState(false);
+    const [chevronRight, setChevronRight] = useState(false);
 
     const test1 = [
         {
@@ -53,17 +56,24 @@ const Carousel = () => {
     // create a button to create a new element
 
     return (
-        <div className='flex'>{test1.map((item, index) => {
-            return (
-                <div className='bg-slate-100 flex flex-col p-1 m-1 w-[200px] rounded' key={index}>
-                    {item.status ?
-                        <span>{icons.check_circle}</span> :
-                        <span>{icons.arrow_right_circle}</span>}
-                    <p className=''>{item.name}</p>
-                    <p className='text-sm font-medium'>{item.date}</p>
-                </div>
-            );
-        })}</div>
+        <div className='relative'>
+            <div className={`flex items-center ${chevronLeft && 'translate-x-[200px] duration-100'} ${chevronRight && 'translate-x-[-200px] duration-100'}`}>
+                {test1.map((item, index) => {
+                    return (
+                        <div className='bg-slate-200 flex flex-col p-1 m-1 w-[200px] rounded last:bg-gradient-to-r from-slate-200 to-white'
+                            key={index}>
+                            {item.status ?
+                                <span>{icons.check_circle}</span> :
+                                <span>{icons.arrow_right_circle}</span>}
+                            <p className=''>{item.name}</p>
+                            <p className='text-sm font-medium'>{item.date}</p>
+                        </div>
+                    );
+                })}
+            </div>
+            <span className='absolute left-0 top-0 z-10 bg-slate-50 h-full' onClick={() => setChevronLeft(!chevronLeft)}>{icons.chevron_left}</span>
+            <span className='absolute right-0 top-0 z-10 bg-slate-50 h-full' onClick={() => setChevronRight(!chevronRight)}>{icons.chevron_right}</span>
+        </div>
     );
 };
 
