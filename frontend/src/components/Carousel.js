@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import icons from '../assets/icons';
 
 const Carousel = () => {
-
-    const [chevronLeft, setChevronLeft] = useState(false);
-    const [chevronRight, setChevronRight] = useState(false);
     const [divOnScreen, setDivOnScreen] = useState(Math.floor(window.innerWidth / 208));
 
     const test1 = [
@@ -57,30 +54,26 @@ const Carousel = () => {
     // when clicking on the element div should open a windows with a form to check the element or add a date
     // create a button to create a new element
 
-    const scrollHandler = (scrollDirection) => {
+
+    const scrollToEnd = (scrollDirection) => {
         if (scrollDirection === "right") {
-            if (test1.length > divOnScreen) {
-                console.log("right");
-                setDivOnScreen(divOnScreen + 3);
-            }
-            else {
-                setDivOnScreen(test1.length);
-            }
+            setDivOnScreen(test1.length - 1);
         }
 
         if (scrollDirection === "left") {
-            if (divOnScreen > 0) {
-                console.log("left");
-                setDivOnScreen(divOnScreen - 3);
-            }
+            setDivOnScreen(1);
         }
     };
 
     return (
         <div className='relative'>
+
             <div className='flex items-center overflow-scroll scroll-smooth'
                 id='scrollElement'
             >
+                <a href={`#${divOnScreen}`} onClick={() => scrollToEnd("left")}>
+                    <span className='absolute left-0 top-0 h-full flex justify-start items-center w-10 rounded bg-gradient-to-r from-white cursor-pointer'>{icons.chevron_left}</span>
+                </a>
                 {test1.map((item, index) => {
                     return (
                         <div className='bg-slate-200 flex flex-col p-1 m-1 rounded min-w-[200px]'
@@ -94,16 +87,10 @@ const Carousel = () => {
                         </div>
                     );
                 })}
+                <a href={`#${divOnScreen}`} onClick={() => scrollToEnd("right")}>
+                    <span className='absolute right-0 top-0 z-10 h-full flex justify-start items-center w-10 rounded bg-gradient-to-l from-white cursor-pointer'>{icons.chevron_right}</span>
+                </a>
             </div>
-            {
-                chevronRight &&
-                <span className='absolute left-0 top-0 z-10 h-full flex justify-start items-center w-10 rounded bg-gradient-to-r from-white cursor-pointer' onClick={() => setChevronLeft(!chevronLeft)}>{icons.chevron_left}</span>
-            }
-            <a href={`#${divOnScreen}`} onClick={() => scrollHandler("right")}>
-
-                <span className='absolute right-0 top-0 z-10 h-full flex justify-start items-center w-10 rounded bg-gradient-to-l from-white cursor-pointer' onClick={() => setChevronRight(!chevronRight)}>{icons.chevron_right}</span>
-            </a>
-            {console.log('div', divOnScreen)}
         </div>
     );
 };
